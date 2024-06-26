@@ -7,3 +7,4 @@ python run.py liuyao/eval_subjective_mtbench101.py --debug
 python run.py liuyao/eval_subjective_mtbench101.py --reuse 20240624_000906 --debug
 python run.py liuyao/eval_subjective_mtbench101.py --mode infer --debug
 python run.py liuyao/eval_subjective_mtbench101.py --mode eval --reuse 20240625_145959
+python run.py liuyao/eval_subjective_mtbench101.py --mode viz --reuse 20240625_145959

@@ -35,7 +35,7 @@ for _name in subjective_all_sets:
             type=LMEvaluator,
             prompt_template=dict(
                 type=PromptTemplate,
-                template=dict(`
+                template=dict(
                     begin=[                             # begin是system，用于带system的对话
                         dict(
                             role='SYSTEM',

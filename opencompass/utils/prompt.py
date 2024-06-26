@@ -77,7 +77,7 @@ def get_prompt_hash(dataset_cfg: Union[ConfigDict, List[ConfigDict]]) -> str:
 
 
 class PromptList(list):
-    """An enhanced list, used for intermidate representation of a prompt."""
+    """An enhanced list, used for intermidate representation of a prompt."""    # YAO: 这个PromptList挺好的！可以拿来自己用！
 
     def format(self, **kwargs) -> PromptList:
         """Replaces all instances of 'src' in the PromptList with 'dst'.

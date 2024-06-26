@@ -77,7 +77,7 @@ def get_final_results(judged_answers, references, output_dir, fout_flag,
 
     columns = list(final_task_scores.keys())
 
-    print('================task_score=====================')
+    print(f'================{model}: task_score=====================')
     print(final_task_scores)
 
     with open(fout, 'a+', newline='') as csvfile:
