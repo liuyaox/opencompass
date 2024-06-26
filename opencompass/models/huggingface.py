@@ -280,7 +280,7 @@ class HuggingFace(BaseModel):
                     '\'pip install "fschat[model_worker,webui]"\' '
                     'to implement fastchat.')
             for i in range(len(inputs)):
-                conv = get_conversation_template('vicuna')
+                conv = get_conversation_template('vicuna')  # YAO TODO 怎么写死了vicuna ?
                 conv.append_message(conv.roles[0], inputs[i])
                 conv.append_message(conv.roles[1], None)
                 inputs[i] = conv.get_prompt()

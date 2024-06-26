@@ -15,7 +15,7 @@ class Registry(OriginalRegistry):
         return super().register_module(name, force, module)
 
 
-PARTITIONERS = Registry('partitioner', locations=['opencompass.partitioners'])
+PARTITIONERS = Registry('partitioner', locations=['opencompass.partitioners'])  # YAO:用于from opencompass.partitioners import xxx？
 RUNNERS = Registry('runner', locations=['opencompass.runners'])
 TASKS = Registry('task', locations=['opencompass.tasks'])
 MODELS = Registry('model', locations=['opencompass.models'])

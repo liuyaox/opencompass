@@ -336,7 +336,7 @@ class LMTemplateParser:
                         for_gen=False)
                     prompt += new_str
 
-            prompt = self.meta_template.get('begin', '') + prompt
+            prompt = self.meta_template.get('begin', '') + prompt   # YAO: 拼接prefix(begin) + prompt + suffix(end)
             if generate:
                 prompt += self.meta_template.get('end', '')
 

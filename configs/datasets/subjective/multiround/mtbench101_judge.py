@@ -6,45 +6,49 @@ from opencompass.datasets import MTBench101Dataset
 
 
 subjective_reader_cfg = dict(
-    input_columns=['dialogue','task','multi_id','turn_id','system_prompt','prompt_template'],
+    input_columns=['dialogue', 'task', 'multi_id', 'turn_id', 'system_prompt', 'prompt_template'],
     output_column='judge',
-    )
+)
 
 subjective_all_sets = [
     'mtbench101',
+    'mtbench101_test',
+    'mtbench101_ja',
+    'mtbench101_ja_test',
 ]
-data_path ='data/subjective/'
+data_path = 'data/subjective/'
 
 subjective_datasets = []
 
 for _name in subjective_all_sets:
     subjective_infer_cfg = dict(
-            prompt_template=dict(
-                type=PromptTemplate,
-                template="""{dialogue}""",
-            ),
-            retriever=dict(type=ZeroRetriever),
-            inferencer=dict(type=ChatInferencer, max_seq_len=4096, max_out_len=4096, infer_mode='last'),
-        )
+        prompt_template=dict(
+            type=PromptTemplate,
+            template="""{dialogue}""",
+        ),
+        retriever=dict(type=ZeroRetriever),
+        inferencer=dict(type=ChatInferencer, max_seq_len=4096, max_out_len=4096, infer_mode='last'),
+    )
 
     subjective_eval_cfg = dict(
         evaluator=dict(
             type=LMEvaluator,
             prompt_template=dict(
                 type=PromptTemplate,
-                template=dict(
-                begin=[
-                    dict(
-                        role='SYSTEM',
-                        fallback_role='HUMAN',
-                        prompt='{system_prompt}')
-                ],
-                    round=[
-                    dict(
-                        role='HUMAN',
-                        prompt = '{prompt_template}'
-                    ),
-                ]),
+                template=dict(`
+                    begin=[                             # begin是system，用于带system的对话
+                        dict(
+                            role='SYSTEM',
+                            fallback_role='HUMAN',
+                            prompt='{system_prompt}')
+                    ],
+                    round=[                             # round表示一句句对话，一个dict表示一句对话
+                        dict(
+                            role='HUMAN',
+                            prompt='{prompt_template}'
+                        ),
+                    ]
+                ),
             ),
         ),
         pred_role='BOT',

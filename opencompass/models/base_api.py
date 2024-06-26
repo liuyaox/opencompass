@@ -412,7 +412,7 @@ class APITemplateParser:
             return None, False
         res = {}
         res['role'] = merged_prompt['api_role']
-        res['prompt'] = merged_prompt.get('begin', '')
+        res['prompt'] = merged_prompt.get('begin', '')      # YAO: 拼接prefix(begin) + prompt + suffix(end)
         res['prompt'] += merged_prompt.get('prompt', '')
         res['prompt'] += merged_prompt.get('end', '')
         return res, True

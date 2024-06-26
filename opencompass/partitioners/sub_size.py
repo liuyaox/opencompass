@@ -134,7 +134,7 @@ class SubjectiveSizePartitioner(SubjectiveNaivePartitioner):
                     else:
                         chunks.append((dataset_size, dataset))
 
-                if self.strategy == 'heuristic':
+                if self.strategy == 'heuristic':        # YAO:启发式策略
                     chunks = sorted(chunks, key=lambda x: x[0], reverse=True)
                     current_size, current_chunks = 0, []
                     for index in range(len(chunks)):

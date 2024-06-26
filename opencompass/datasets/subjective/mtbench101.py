@@ -5,7 +5,6 @@ import re
 from typing import Optional
 
 from datasets import Dataset, DatasetDict
-from torch.utils.data import DataLoader, Dataset
 
 from opencompass.registry import LOAD_DATASET
 
@@ -243,9 +242,9 @@ def eval_prompt_construct(task, ref_answer, history):
     else:
         system_prompt = judge + unique_prompt[task] + score_format
         prompt_template = 'The dialogue need to be judged is: \n *** \n {history} {prediction} \n ***'.format(
-            history=history, prediction='{prediction}')
+            history=history, prediction='{prediction}')     # YAO: history被填充，但prediction不填充(TODO 后续再填充？)，因为这是template?
 
-    return system_prompt, prompt_template
+    return system_prompt, prompt_template   # YAO: 分别交由system和human来说
 
 
 def add_format(question, answer):
@@ -262,7 +261,6 @@ class MTBench101Dataset(BaseDataset):
         import copy
 
         filename = osp.join(path, f'{name}.jsonl')
-        # filename = osp.join(path, 'mtbench101.jsonl')
         dataset = DatasetDict()
         raw_data = []
 
@@ -284,7 +282,7 @@ class MTBench101Dataset(BaseDataset):
             pre_dia = []
             history = ''
             dia_list = []
-            for turn_index, turn in enumerate(dialogue['history']):
+            for turn_index, turn in enumerate(dialogue['history']):     # YAO：history里每轮对话都要处理，每轮对话都要让模型回答、让Judge评测
                 human = turn['user']
                 assistant = turn['bot']
                 turn_id = str(turn_index + 1)
@@ -297,10 +295,10 @@ class MTBench101Dataset(BaseDataset):
 
                 if skip_first and turn_index == 0:
                     pre_dia = add_format(question=human, answer=assistant)
-                    history = '\n\n Human: ' + human + '\n\nAssistant: ' + assistant
+                    history = '\n\n Human: ' + human + '\n\nAssistant: ' + assistant    # YAO: 不用复杂的special token，直接用最简单方式拼接Human和Assistant的内容
                     continue
 
-                history = history + '\n\n Human: ' + human + '\n\nAssistant: '
+                history = history + '\n\n Human: ' + human + '\n\nAssistant: '  # YAO: 最后1轮，只有Human，没有Assistant（下面再拼接Assistant的内容）
                 pre_dia += add_format(question=human, answer=assistant)
 
                 pre_dia_copy = copy.deepcopy(pre_dia)
@@ -321,7 +319,7 @@ class MTBench101Dataset(BaseDataset):
                         'turn_id': turn_id,
                     }
                 })
-                history = history + assistant
+                history = history + assistant   # YAO：这里再拼接Assistant，对应上面的line302
 
         dataset = Dataset.from_list(raw_data)
         return dataset

@@ -5,6 +5,7 @@ import getpass
 import os
 import os.path as osp
 from datetime import datetime
+import time
 
 from mmengine.config import Config, DictAction
 
@@ -142,6 +143,11 @@ def parse_args():
             'in "~/.aliyun.cfg", or use "--aliyun-cfg $ALiYun-CFG_Path"'
             ' to specify a new path.')
     return args
+
+
+def run():
+    while True:
+        time.sleep(1)
 
 
 def parse_slurm_args(slurm_parser):

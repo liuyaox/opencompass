@@ -13,8 +13,8 @@ from .glm import GLM130B  # noqa: F401
 from .huggingface import HuggingFace  # noqa: F401
 from .huggingface import HuggingFaceCausalLM  # noqa: F401
 from .huggingface import HuggingFaceChatGLM3  # noqa: F401
-from .huggingface_above_v4_33 import HuggingFaceBaseModel  # noqa: F401
-from .huggingface_above_v4_33 import HuggingFacewithChatTemplate  # noqa: F401
+from .huggingface_above_v4_33 import HuggingFaceBaseModel  # noqa: F401         # YAO Base模型
+from .huggingface_above_v4_33 import HuggingFacewithChatTemplate  # noqa: F401  # YAO Chat或Instruct模型
 from .hunyuan_api import Hunyuan  # noqa: F401
 from .intern_model import InternLM  # noqa: F401
 from .krgpt_api import KrGPT  # noqa: F401

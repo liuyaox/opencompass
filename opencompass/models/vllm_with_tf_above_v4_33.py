@@ -93,7 +93,7 @@ class VLLMwithChatTemplate(BaseModel):
             messages = [self.tokenizer.apply_chat_template(m, add_generation_prompt=True, tokenize=False) for m in messages]
 
         DEFAULT_GENERATION_KWARGS = {
-            'temperature': 0,
+            'temperature': 0,               # YAO: 写死了temperature为0 评测时一般设置为0?
             'max_tokens': max_out_len,
             'stop': list(set(self.stop_words + stopping_criteria))
         }

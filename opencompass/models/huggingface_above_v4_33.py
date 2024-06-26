@@ -71,13 +71,13 @@ def _convert_chat_messages(inputs, merge_role=True):
                     'HUMAN': 'user',
                     'BOT': 'assistant',
                     'SYSTEM': 'system',
-                }[item['role']]
-                messages.append({'role': role, 'content': item['prompt']})
+                }[item['role']]             # YAO: 转化为标准的role: system, user, assistant
+                messages.append({'role': role, 'content': item['prompt']})  # YAO: 转化为标准的message形式
 
         if merge_role:
             merged_messages = []
             for item in messages:
-                if merged_messages and merged_messages[-1]['role'] == item['role']:
+                if merged_messages and merged_messages[-1]['role'] == item['role']:     # YAO: 合并同一role的连续message
                     merged_messages[-1]['content'] += '\n' + item['content']
                 else:
                     merged_messages.append(item)
@@ -89,7 +89,7 @@ def _convert_chat_messages(inputs, merge_role=True):
 
 def _format_with_fast_chat_template(inputs: List[str], name: str='vicuna'):
     try:
-        from fastchat.model import get_conversation_template
+        from fastchat.model import get_conversation_template    # YAO: 有意思！直接引入fastchat的template
     except ImportError:
         raise ModuleNotFoundError('fastchat not found. Please install with\npip install "fschat[model_worker,webui]"')
 
@@ -141,6 +141,7 @@ def _set_model_kwargs_torch_dtype(model_kwargs):
 
 @MODELS.register_module()
 class HuggingFacewithChatTemplate(BaseModel):
+    """YAO: Chat或Instruct版的huggingface模型（tokenizer自带chat template 或者 fastchat支持chat template）"""
 
     def __init__(self,
                  path: str,
@@ -255,10 +256,10 @@ class HuggingFacewithChatTemplate(BaseModel):
             add_special_tokens=True,
             max_length=self.max_seq_len
         )
-        if self.fastchat_template:
+        if self.fastchat_template:  # YAO: 使用fastchat定义的chat template: from fastchat.model import get_conversation_template
             messages = _format_with_fast_chat_template(messages, self.fastchat_template)
             tokens = self.tokenizer.batch_encode_plus(messages, **tokenize_kwargs)
-        else:
+        else:                       # YAO: 使用tokenizer的apply_chat_template来引入chat template，不需要手动指定
             messages = [self.tokenizer.apply_chat_template(m, add_generation_prompt=True, tokenize=False) for m in messages]
             tokenize_kwargs['add_special_tokens'] = False
             tokens = self.tokenizer.batch_encode_plus(messages, **tokenize_kwargs)
@@ -292,7 +293,8 @@ class HuggingFacewithChatTemplate(BaseModel):
         t = self.tokenizer.apply_chat_template(m, add_generation_prompt=True, return_dict=True)
         return len(t['input_ids'])
 
-def  _convert_base_messages(inputs):
+
+def _convert_base_messages(inputs):
     outputs = []
     for _input in inputs:
         if isinstance(_input, str):
@@ -301,11 +303,12 @@ def  _convert_base_messages(inputs):
             messages = []
             for item in _input:
                 messages.append(item['prompt'])
-            outputs.append(''.join(messages))
+            outputs.append(''.join(messages))    # YAO: 字符串列表！注意，不是{'role':xxx, 'content':xxx}列表！用于Base模型、Chat/Instruct模型
     return outputs
 
 
 class HuggingFaceBaseModel(HuggingFacewithChatTemplate):
+    """YAO: Base版的HuggingFace模型，不是Chat或Instruct版，没有所谓的chat template"""
 
     def __init__(self,
                  path: str,
@@ -352,7 +355,7 @@ class HuggingFaceBaseModel(HuggingFacewithChatTemplate):
             add_special_tokens=True,
             max_length=self.max_seq_len
         )
-        tokens = self.tokenizer.batch_encode_plus(messages, **tokenize_kwargs)
+        tokens = self.tokenizer.batch_encode_plus(messages, **tokenize_kwargs)  # YAO: messages是字符串列表，不用再做apply_chat_template
         tokens = {k: v.to(self.model.device) for k, v in tokens.items()}
 
         generation_kwargs = self.generation_kwargs.copy()
