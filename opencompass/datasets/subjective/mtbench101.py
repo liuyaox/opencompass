@@ -242,7 +242,7 @@ def eval_prompt_construct(task, ref_answer, history):
     else:
         system_prompt = judge + unique_prompt[task] + score_format
         prompt_template = 'The dialogue need to be judged is: \n *** \n {history} {prediction} \n ***'.format(
-            history=history, prediction='{prediction}')     # YAO: history被填充，但prediction不填充(TODO 后续再填充？)，因为这是template?
+            history=history, prediction='{prediction}')     # YAO: history被填充，但prediction不填充(后续会填充) TODO 添加非英语时的language说明？
 
     return system_prompt, prompt_template   # YAO: 分别交由system和human来说
 

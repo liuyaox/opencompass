@@ -1,4 +1,5 @@
 from opencompass.models import OpenAI, VLLM, VLLMwithChatTemplate
+from opencompass.models.template import qwen_meta_template, karakuri_meta_template, suzume_meta_template, api_meta_template
 from opencompass.partitioners.sub_size import SubjectiveSizePartitioner
 from opencompass.runners import LocalRunner
 from opencompass.tasks.subjective_eval import SubjectiveEvalTask
@@ -10,36 +11,7 @@ with read_base():
     from ..configs.datasets.subjective.multiround.mtbench101_judge import subjective_datasets
 
 
-api_meta_template = dict(
-    round=[
-        dict(role='SYSTEM', api_role='SYSTEM'),
-        dict(role='HUMAN', api_role='HUMAN'),
-        dict(role='BOT', api_role='BOT', generate=True),
-    ]
-)
-qwen_meta_template = dict(
-    round=[
-        dict(role="HUMAN", begin='<|im_start|>user\n', end='<|im_end|>\n'),
-        dict(role="BOT", begin="<|im_start|>assistant\n", end='<|im_end|>\n', generate=True),
-    ],
-    eos_token_id=151645,
-)
-karakuri_meta_template = dict(
-    round=[
-        dict(role="HUMAN", begin='[INST] ', end=' [ATTR] helpfulness: 4 correctness: 4 coherence: 4 complexity: 4 verbosity: 4 quality: 4 toxicity: 0 humor: 0 creativity: 0 [/ATTR] [/INST]'),
-        dict(role="BOT", begin="", end='</s>', generate=True),
-    ],
-    eos_token_id=2,
-)
-suzume_meta_template = dict(
-    round=[
-        dict(role="HUMAN", begin='<|start_header_id|>user<|end_header_id|>\n\n', end='<|eot_id|>'),
-        dict(role="BOT", begin="<|start_header_id|>assistant<|end_header_id|>\n\n", end='<|eot_id|>', generate=True),
-    ],
-    eos_token_id=128009,
-)
 GPU_NUMS = 2
-
 
 prefix = '/maindata/data/user/ai_story/yao.liu/multilingual/Japanese'
 v1_6_path = f'{prefix}/Qwen2-57B-A14B-Instruct_SFT_SEQ4096_LR5e-6_EP4_GBS32x1x1_NEFT0_20240609_synthetic0530_common2/checkpoints/checkpoint-260'
@@ -118,7 +90,6 @@ models = [
 ]
 datasets = [x for x in subjective_datasets if x['abbr'] in ['mtbench101_ja']]
 
-
 judge_models = [dict(
     abbr='GPT4-Turbo',
     type=OpenAI,
@@ -161,4 +132,4 @@ eval = dict(
 
 summarizer = dict(type=MTBench101Summarizer, judge_type='single')
 
-work_dir = 'outputs/mtbench101/'
+work_dir = 'outputs/mtbench101_ja/'

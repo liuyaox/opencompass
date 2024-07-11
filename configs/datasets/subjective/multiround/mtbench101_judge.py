@@ -15,6 +15,18 @@ subjective_all_sets = [
     'mtbench101_test',
     'mtbench101_ja',
     'mtbench101_ja_test',
+    'mtbench101_ar',
+    'mtbench101_ar_test',
+    'mtbench101_id',
+    'mtbench101_id_test',
+    'mtbench101_fr',
+    'mtbench101_fr_test',
+    'mtbench101_de',
+    'mtbench101_de_test',
+    'mtbench101_it',
+    'mtbench101_it_test',
+    'mtbench101_es',
+    'mtbench101_es_test'
 ]
 data_path = 'data/subjective/'
 
